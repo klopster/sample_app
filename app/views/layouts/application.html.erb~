@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <title><%= yield(:title) %> | tutorial</title>
+       <title><%= yield(:title) %> ...tutorial</title>
 
     
     <%= csrf_meta_tags %>
