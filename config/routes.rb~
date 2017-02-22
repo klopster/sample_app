@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  get 'users/new'
+  
 
   root 'static_pages#home'
   
@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   
   get '/signup' , to: 'users#signup'
 
+  
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
