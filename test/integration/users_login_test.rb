@@ -26,7 +26,6 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
 
 
 	test "login with valid information followed by logout" do
-    
     #Visit the login path.
     #Post valid information to the sessions path.
     #Check if logged in
@@ -34,7 +33,6 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     #Verify that a logout link appears
     #Verify that a profile link appears. 
     #logout check-logout_path, not logged in,redirection to root,_header menu change
-    
     get login_path
     post login_path, params: { session: { email:    @user.email,
                                           password: 'password' } }
@@ -51,18 +49,16 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
      # Simulate a user clicking logout in a second window.
     delete logout_path
-
     follow_redirect!
     assert_select "a[href=?]", login_path
     assert_select "a[href=?]", logout_path,      count: 0
     assert_select "a[href=?]", user_path(@user), count: 0
-
-  end
+    end
   
   	test "login with remembering" do
     log_in_as(@user, remember_me: '1')
     assert_not_empty cookies['remember_token']
-  end
+    end
 
   test "login without remembering" do
     # Log in to set the cookie.
