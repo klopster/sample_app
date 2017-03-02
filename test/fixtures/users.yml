@@ -3,17 +3,24 @@ fixture:
    name: fixture
    email: fixture@mail.com
    password_digest: <%= User.digest('password') %>
+   admin: true
+   activated: true
+   activated_at: <%= Time.zone.now.to_datetime %>  
    
 fixture2:
    name: fixture2
    email: fixture2@mail.net
    password_digest: <%= User.digest('password') %>
+   activated: true
+   activated_at: <%= Time.zone.now.to_datetime %>
 
 <% 30.times do |n| %>
 user_<%= n %>:
   name:  <%= "User #{n}" %>
   email: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now.to_datetime %>
 <% end %>
 
    

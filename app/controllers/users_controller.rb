@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
  #only logged in user can do such thing listened below,test to proof that is made too,its a security hole
- before_action :logged_in_user, only: [:index, :edit, :update]
+ before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
  before_action :correct_user , only: [:edit, :update]
+ before_action :admin_user , only: [:destroy]
  
 
 	def index
@@ -48,6 +49,14 @@ class UsersController < ApplicationController
   	end
   end	
   
+  
+  #delete user fro users
+  def destroy
+  	User.find(params[:id]).destroy
+  	flash[:success] = "User deleted"
+  	redirect_to users_url
+  end	
+  
     
   #local method for path the security hole of mass assigment of params
   private
@@ -70,6 +79,11 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user)
           
+    end
+    
+    # Confirms an admin user.
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
     end
     
     	
