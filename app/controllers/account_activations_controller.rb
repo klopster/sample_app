@@ -5,7 +5,8 @@ def edit
     #if user in not activated but is authenticated,then update to activated state
     if user && !user.activated? && user.authenticated?(:activation, params[:id])
       user.update_attribute(:activated,    true)
-      user.update_attribute(:activated_at, Time.zone.now.date_time
+      user.update_attribute(:activated_at, Time.zone.now.to_datetime)
+      user.activate
       log_in user
       flash[:success] = "Account activated!"
       redirect_to user
