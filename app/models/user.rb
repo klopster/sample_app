@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-	attr_accessor :remember_token , :activation_token
+	attr_accessor :remember_token , :activation_token, :reset_token
 	#for saving in db we change all addresses tu downcase;self means a current user
 	before_save :downcase_email
 	before_save :create_activation_digest
@@ -66,6 +66,24 @@ class User < ApplicationRecord
   end
   
   
+  # Sets the password reset attributes.
+  def create_reset_digest
+    self.reset_token = User.new_token
+    #update_attribute(:reset_digest,  User.digest(reset_token))
+    #update_attribute(:reset_sent_at, Time.zone.now.to_datetime)
+    #instead of hit db 2time,hit only once with following line
+    update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now.to_datetime)
+  end
+  
+   # Sends password reset email.
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+  
+  # Returns true if a password reset has expired.
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
   
   
   private
