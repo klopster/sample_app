@@ -4,6 +4,9 @@ class User < ApplicationRecord
 	#for saving in db we change all addresses tu downcase;self means a current user
 	before_save :downcase_email
 	before_save :create_activation_digest
+	has_many :microposts, dependent: :destroy
+
+
 		
 	#validation
 	validates :name, presence: true , length: {maximum: 50}
@@ -83,6 +86,13 @@ class User < ApplicationRecord
   # Returns true if a password reset has expired.
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+  
+  # Defines a proto-feed.
+  # See "Following users" for the full implementation.
+  # escaping id in the sql query by ? is covering security hole to sql injection
+  def feed
+    Micropost.where("user_id = ?", id)
   end
   
   

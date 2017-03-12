@@ -13,6 +13,13 @@ fixture2:
    password_digest: <%= User.digest('password') %>
    activated: true
    activated_at: <%= Time.zone.now.to_datetime %>
+   
+fixture3:
+   name: fixture3
+   email: fixture3@mail.net
+   password_digest: <%=User.digest('password') %>
+   activated: true
+   activated_at: <%= Time.zone.now.to_datetime %>   
 
 <% 30.times do |n| %>
 user_<%= n %>:
