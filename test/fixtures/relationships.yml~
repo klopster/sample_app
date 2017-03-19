@@ -1,0 +1,18 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  follower: fixture
+  followed: fixture3
+
+two:
+  follower: fixture
+  followed: fixture3
+
+three:
+  follower: fixture2
+  followed: fixture3
+
+four:
+  follower: fixture2
+  followed: fixture
+

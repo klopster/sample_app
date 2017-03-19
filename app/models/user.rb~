@@ -3,8 +3,30 @@ class User < ApplicationRecord
 	attr_accessor :remember_token , :activation_token, :reset_token
 	#for saving in db we change all addresses tu downcase;self means a current user
 	before_save :downcase_email
+	#user account activation
 	before_save :create_activation_digest
+	#microposts
 	has_many :microposts, dependent: :destroy
+	#following users
+	has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy
+  has_many :passive_relationships, class_name:  "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent:   :destroy
+                                
+  #has_many :through association Rails looks for a foreign key corresponding to the singular version of the
+  #association
+  #Rails would see “followeds” and use the singular “followed”, 
+  #assembling a collection using the followed_id in the relationships table
+  #user.followeds is rather awkward, so we’ll write user.following instead,using the "source" parameter
+  #says that the source of the following array is the set of followed ids.
+  has_many :following, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships, source: :follower
+
+  
+                                  
+
 
 
 		
@@ -90,10 +112,28 @@ class User < ApplicationRecord
   
   # Defines a proto-feed.
   # See "Following users" for the full implementation.
+  # escaping id in the sql query by ? is covering security hole to sql injection
   def feed
-    Micropost.where("user_id = ?", id)
+    Micropost.where("user_id IN (:following_ids) OR user_id = :user_id",
+                    following_ids: following_ids, user_id: id)
+
   end
   
+  
+  # Follows a user.
+  def follow(other_user)
+    following << other_user
+  end
+
+  # Unfollows a user.
+  def unfollow(other_user)
+    following.delete(other_user)
+  end
+
+  # Returns true if the current user is following the other user.
+  def following?(other_user)
+    following.include?(other_user)
+  end
   
   private
 
@@ -108,6 +148,7 @@ class User < ApplicationRecord
       self.activation_digest = User.digest(activation_token)
     end
   
+  	
   
 end
 
